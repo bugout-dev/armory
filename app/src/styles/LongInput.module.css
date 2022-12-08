@@ -1,0 +1,26 @@
+.container_input {
+    display: flex;
+    margin: 0.5em 0;
+}
+
+.container_input input {
+    background-color: transparent;
+    border: 1px solid var(--text-main-color-dark);
+    border-radius: 0.6em;
+    padding: 0.6em 1em;
+    outline: none;
+    width: 100%;
+    color: var(--primary-color);
+}
+
+.container_input input:focus {
+    border: 1px solid var(--primary-color);
+}
+
+.container_input input:hover {
+    background-color: var(--background-color-dark);
+}
+
+.container_input input::placeholder {
+    color: var(--text-main-color-dark);
+}

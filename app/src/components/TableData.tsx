@@ -18,23 +18,20 @@ const TableData = ({
                         key={"headerGroup"}
                         {...headerGroup.getHeaderGroupProps()}
                     >
-                        {headerGroup.headers.map((column) => {
-                            const modifiedColumnProps =
-                                column.getSortByToggleProps()
-                            modifiedColumnProps.style.minWidth = column.minWidth
-                            modifiedColumnProps.style.width = column.width
-                            modifiedColumnProps.style.maxWidth = column.maxWidth
-                            return (
-                                <th
-                                    key={column.Header}
-                                    {...column.getHeaderProps(
-                                        modifiedColumnProps
-                                    )}
-                                >
-                                    {column.render("Header")}
-                                </th>
-                            )
-                        })}
+                        {headerGroup.headers.map((column) => (
+                            <th
+                                key={column.Header}
+                                {...column.getHeaderProps({
+                                    style: {
+                                        minWidth: column.minWidth,
+                                        width: column.width,
+                                        maxWidth: column.maxWidth,
+                                    },
+                                })}
+                            >
+                                {column.render("Header")}
+                            </th>
+                        ))}
                     </tr>
                 ))}
             </thead>

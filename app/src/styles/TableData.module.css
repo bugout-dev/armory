@@ -1,20 +1,15 @@
-/* Table */
 .table {
     border-collapse: collapse;
-    width: 90%;
+    width: 95%;
     margin: auto;
     background-color: var(--background-color-dark);
     border-radius: 1em;
+    margin-bottom: 1em;
 }
 
 .table td,
 .table th {
-    padding: 0.5em 8px;
-}
-
-.table thead,
-.table tbody {
-    padding: 0 1em;
+    padding: 0.5em 2em;
 }
 
 /* Custom style to implement scroll */
