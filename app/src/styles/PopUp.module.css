@@ -1,0 +1,9 @@
+.container_popup {
+    display: flex;
+}
+
+.container_popup p {
+    margin-top: 15%;
+    text-align: center;
+    width: 100%;
+}

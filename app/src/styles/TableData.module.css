@@ -1,0 +1,45 @@
+/* Table */
+.table {
+    border-collapse: collapse;
+    width: 90%;
+    margin: auto;
+    background-color: var(--background-color-dark);
+    border-radius: 1em;
+}
+
+.table td,
+.table th {
+    padding: 0.5em 8px;
+}
+
+.table thead,
+.table tbody {
+    padding: 0 1em;
+}
+
+/* Custom style to implement scroll */
+.table tbody {
+    display: block;
+    max-height: 60vh;
+    overflow-y: scroll;
+    margin: 0;
+}
+
+/* Custom style to implement scroll */
+.table thead,
+.table tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    margin: 0;
+}
+
+.table tbody tr:hover {
+    background-color: var(--hover-color);
+}
+
+.table th {
+    padding-top: 1em;
+    padding-bottom: 1em;
+    text-align: left;
+}
