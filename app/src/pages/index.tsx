@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useMemo } from "react"
-import { useTable } from "react-table"
+import React, { useState, useEffect, useMemo, useCallback, useRef } from "react"
+import { useTable, usePagination } from "react-table"
 
 import Layout from "../components/Layout"
 import TopBar from "../components/TopBar"
@@ -8,6 +8,9 @@ import useTokenData from "../hooks/useTokenData"
 import styles from "../styles/Index.module.css"
 
 const Index = () => {
+    const [goToTokenId, setGoToTokenId] = useState<number>()
+    const [activeTopbarRef, setActiveTopbarRef] = useState(null)
+
     const onSuccess = () => {}
     const onError = (error) => {
         console.log(error?.message)
@@ -51,29 +54,57 @@ const Index = () => {
         getTableProps,
         getTableBodyProps,
         headerGroups,
-        rows,
+        page,
+        nextPage,
+        previousPage,
+        canNextPage,
+        canPreviousPage,
+        pageOptions,
+        gotoPage,
+        pageCount,
+        state,
         prepareRow,
         allColumns,
-    } = useTable({
-        columns: columns,
-        data: data,
-    })
+    } = useTable(
+        {
+            columns: columns,
+            data: data,
+            initialState: { pageSize: 10 },
+        },
+        usePagination
+    )
+
+    const { pageIndex } = state
 
     return (
         <Layout>
             <div className={styles.container_index}>
                 <div className={styles.top_bar}>
-                    <TopBar allColumns={allColumns} />
+                    <TopBar
+                        allColumns={allColumns}
+                        goToTokenId={goToTokenId}
+                        setGoToTokenId={setGoToTokenId}
+                        activeTopbarRef={activeTopbarRef}
+                        pageIndex={pageIndex}
+                        pageCount={pageCount}
+                        pageOptions={pageOptions}
+                        gotoPage={gotoPage}
+                        canPreviousPage={canPreviousPage}
+                        previousPage={previousPage}
+                        nextPage={nextPage}
+                        canNextPage={canNextPage}
+                    />
                 </div>
-
                 <div className={styles.table_data}>
                     {!isLoadingTokens && (
                         <TableData
                             getTableProps={getTableProps}
                             getTableBodyProps={getTableBodyProps}
                             headerGroups={headerGroups}
-                            rows={rows}
+                            rows={page}
                             prepareRow={prepareRow}
+                            goToTokenId={goToTokenId}
+                            setActiveTopbarRef={setActiveTopbarRef}
                         />
                     )}
                 </div>

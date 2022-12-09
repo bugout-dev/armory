@@ -1,6 +1,6 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 
-import Layout from "../components/Layout"
+import TableDataRow from "./TableDataRow"
 import styles from "../styles/TableData.module.css"
 
 const TableData = ({
@@ -9,7 +9,11 @@ const TableData = ({
     headerGroups,
     rows,
     prepareRow,
+    goToTokenId,
+    setActiveTopbarRef,
 }) => {
+    console.log("TableData rerendered")
+
     return (
         <div className={styles.container_table}>
             <table className={styles.table} {...getTableProps()}>
@@ -40,26 +44,12 @@ const TableData = ({
                     {rows.map((row) => {
                         prepareRow(row)
                         return (
-                            <tr key={row.id} {...row.getRowProps()}>
-                                {row.cells.map((cell) => {
-                                    return (
-                                        <td
-                                            key={cell.value}
-                                            {...cell.getCellProps({
-                                                style: {
-                                                    minWidth:
-                                                        cell.column.minWidth,
-                                                    width: cell.column.width,
-                                                    maxWidth:
-                                                        cell.column.maxWidth,
-                                                },
-                                            })}
-                                        >
-                                            {cell.render("Cell")}
-                                        </td>
-                                    )
-                                })}
-                            </tr>
+                            <TableDataRow
+                                key={row.id}
+                                row={row}
+                                setActiveTopbarRef={setActiveTopbarRef}
+                                goToTokenId={goToTokenId}
+                            />
                         )
                     })}
                 </tbody>
