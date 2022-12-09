@@ -1,0 +1,17 @@
+.page_navigation_container {
+    display: flex;
+    margin: 0;
+}
+
+.page_navigation_container p {
+    padding-top: 0.4em;
+    padding-right: 1em;
+    text-align: right;
+    margin: 0;
+}
+
+.navigation {
+    /* border: 1px solid yellow; */
+    flex: 2;
+    margin: 0;
+}

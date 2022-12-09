@@ -1,17 +1,16 @@
 import React, { useEffect } from "react"
 
-import styles from "../styles/LongInput.module.css"
+import styles from "../styles/NumInput.module.css"
 
-const NumInput = ({ input, setInput, ...rest }) => {
+const NumInput = ({ input, onChange, ...rest }) => {
     return (
-        <div className={styles.container_input}>
-            <input
-                value={input || ""}
-                onChange={(event) => setInput(event.target.value)}
-                placeholder={rest.placeholder}
-                type="number"
-            />
-        </div>
+        <input
+            className={styles.container_input}
+            value={input || ""}
+            onChange={onChange}
+            placeholder={rest.placeholder}
+            type="number"
+        />
     )
 }
 

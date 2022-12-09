@@ -1,4 +1,4 @@
-.container_input {
+.container_select {
     display: flex;
     margin: 0;
     background-color: transparent;
@@ -9,17 +9,26 @@
     width: 100%;
     color: var(--text-main-color-dark);
     font-family: Space Grotesk, sans-serif;
+
+    /* Remove default arrow */
+    -webkit-appearance: none;
+    appearance: none;
+    /* Use custom arrow */
+    background-image: url("../../public/arrow-down.svg");
+    background-size: 16px;
+    background-repeat: no-repeat;
+    background-position: calc(100% - 8px) center;
 }
 
-.container_input:focus {
+.container_select:focus {
     border: 1px solid var(--primary-color);
     color: var(--primary-color);
 }
 
-.container_input:hover {
+.container_select:hover {
     background-color: var(--background-color-dark);
 }
 
-.container_input::placeholder {
+.container_select::placeholder {
     color: var(--text-main-color-dark);
 }

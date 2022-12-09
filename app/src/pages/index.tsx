@@ -2,8 +2,10 @@ import React, { useState, useEffect, useMemo, useCallback, useRef } from "react"
 import { useTable, usePagination } from "react-table"
 
 import Layout from "../components/Layout"
+import ProjectBar from "../components/ProjectBar"
 import TopBar from "../components/TopBar"
 import TableData from "../components/TableData"
+import useProjectTokens from "../hooks/useProjectTokens"
 import useTokenData from "../hooks/useTokenData"
 import styles from "../styles/Index.module.css"
 
@@ -15,6 +17,8 @@ const Index = () => {
     const onError = (error) => {
         console.log(error?.message)
     }
+    const { isLoading: isLoadingProjectTokens, data: projectTokens } =
+        useProjectTokens(onSuccess, onError)
     const { isLoading: isLoadingTokens, data: dataTokens } = useTokenData(
         onSuccess,
         onError
@@ -69,7 +73,7 @@ const Index = () => {
         {
             columns: columns,
             data: data,
-            initialState: { pageSize: 10 },
+            initialState: { pageSize: 15 },
         },
         usePagination
     )
@@ -79,34 +83,42 @@ const Index = () => {
     return (
         <Layout>
             <div className={styles.container_index}>
-                <div className={styles.top_bar}>
-                    <TopBar
-                        allColumns={allColumns}
-                        goToTokenId={goToTokenId}
-                        setGoToTokenId={setGoToTokenId}
-                        activeTopbarRef={activeTopbarRef}
-                        pageIndex={pageIndex}
-                        pageCount={pageCount}
-                        pageOptions={pageOptions}
-                        gotoPage={gotoPage}
-                        canPreviousPage={canPreviousPage}
-                        previousPage={previousPage}
-                        nextPage={nextPage}
-                        canNextPage={canNextPage}
-                    />
-                </div>
-                <div className={styles.table_data}>
-                    {!isLoadingTokens && (
-                        <TableData
-                            getTableProps={getTableProps}
-                            getTableBodyProps={getTableBodyProps}
-                            headerGroups={headerGroups}
-                            rows={page}
-                            prepareRow={prepareRow}
-                            goToTokenId={goToTokenId}
-                            setActiveTopbarRef={setActiveTopbarRef}
-                        />
-                    )}
+                <div className={styles.content}>
+                    <div className={styles.container_project}>
+                        <ProjectBar projectTokens={projectTokens} />
+                    </div>
+                    <div className={styles.container_data}>
+                        <div className={styles.top_bar}>
+                            <TopBar
+                                allColumns={allColumns}
+                                goToTokenId={goToTokenId}
+                                setGoToTokenId={setGoToTokenId}
+                                activeTopbarRef={activeTopbarRef}
+                                pageIndex={pageIndex}
+                                pageCount={pageCount}
+                                pageOptions={pageOptions}
+                                gotoPage={gotoPage}
+                                canPreviousPage={canPreviousPage}
+                                previousPage={previousPage}
+                                nextPage={nextPage}
+                                canNextPage={canNextPage}
+                                projectTokens={projectTokens}
+                            />
+                        </div>
+                        <div className={styles.table_data}>
+                            {!isLoadingTokens && (
+                                <TableData
+                                    getTableProps={getTableProps}
+                                    getTableBodyProps={getTableBodyProps}
+                                    headerGroups={headerGroups}
+                                    rows={page}
+                                    prepareRow={prepareRow}
+                                    goToTokenId={goToTokenId}
+                                    setActiveTopbarRef={setActiveTopbarRef}
+                                />
+                            )}
+                        </div>
+                    </div>
                 </div>
             </div>
         </Layout>

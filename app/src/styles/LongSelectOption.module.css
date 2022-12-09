@@ -1,0 +1,8 @@
+.container_option {
+    background-color: var(--background-color-dark);
+    color: var(--text-main-color-dark);
+}
+
+.container_option:hover {
+    color: var(--primary-color);
+}
