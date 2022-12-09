@@ -1,9 +1,13 @@
+.container_table {
+    overflow-x: scroll;
+    background-color: var(--background-color-dark);
+    margin: 1em;
+    border-radius: 1em;
+}
+
 .table {
     border-collapse: collapse;
-    width: 95%;
     margin: auto;
-    background-color: var(--background-color-dark);
-    border-radius: 1em;
     margin-bottom: 1em;
 }
 

@@ -10,11 +10,13 @@
     padding: 0.6em 1em;
     outline: none;
     width: 100%;
-    color: var(--primary-color);
+    color: var(--text-main-color-dark);
+    font-family: Space Grotesk, sans-serif;
 }
 
 .container_input input:focus {
     border: 1px solid var(--primary-color);
+    color: var(--primary-color);
 }
 
 .container_input input:hover {

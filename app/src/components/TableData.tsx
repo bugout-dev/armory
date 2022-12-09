@@ -11,56 +11,60 @@ const TableData = ({
     prepareRow,
 }) => {
     return (
-        <table className={styles.table} {...getTableProps()}>
-            <thead>
-                {headerGroups.map((headerGroup) => (
-                    <tr
-                        key={"headerGroup"}
-                        {...headerGroup.getHeaderGroupProps()}
-                    >
-                        {headerGroup.headers.map((column) => (
-                            <th
-                                key={column.Header}
-                                {...column.getHeaderProps({
-                                    style: {
-                                        minWidth: column.minWidth,
-                                        width: column.width,
-                                        maxWidth: column.maxWidth,
-                                    },
-                                })}
-                            >
-                                {column.render("Header")}
-                            </th>
-                        ))}
-                    </tr>
-                ))}
-            </thead>
-            <tbody {...getTableBodyProps()}>
-                {rows.map((row) => {
-                    prepareRow(row)
-                    return (
-                        <tr key={row.id} {...row.getRowProps()}>
-                            {row.cells.map((cell) => {
-                                return (
-                                    <td
-                                        key={cell.value}
-                                        {...cell.getCellProps({
-                                            style: {
-                                                minWidth: cell.column.minWidth,
-                                                width: cell.column.width,
-                                                maxWidth: cell.column.maxWidth,
-                                            },
-                                        })}
-                                    >
-                                        {cell.render("Cell")}
-                                    </td>
-                                )
-                            })}
+        <div className={styles.container_table}>
+            <table className={styles.table} {...getTableProps()}>
+                <thead>
+                    {headerGroups.map((headerGroup) => (
+                        <tr
+                            key={"headerGroup"}
+                            {...headerGroup.getHeaderGroupProps()}
+                        >
+                            {headerGroup.headers.map((column) => (
+                                <th
+                                    key={column.Header}
+                                    {...column.getHeaderProps({
+                                        style: {
+                                            minWidth: column.minWidth,
+                                            width: column.width,
+                                            maxWidth: column.maxWidth,
+                                        },
+                                    })}
+                                >
+                                    {column.render("Header")}
+                                </th>
+                            ))}
                         </tr>
-                    )
-                })}
-            </tbody>
-        </table>
+                    ))}
+                </thead>
+                <tbody {...getTableBodyProps()}>
+                    {rows.map((row) => {
+                        prepareRow(row)
+                        return (
+                            <tr key={row.id} {...row.getRowProps()}>
+                                {row.cells.map((cell) => {
+                                    return (
+                                        <td
+                                            key={cell.value}
+                                            {...cell.getCellProps({
+                                                style: {
+                                                    minWidth:
+                                                        cell.column.minWidth,
+                                                    width: cell.column.width,
+                                                    maxWidth:
+                                                        cell.column.maxWidth,
+                                                },
+                                            })}
+                                        >
+                                            {cell.render("Cell")}
+                                        </td>
+                                    )
+                                })}
+                            </tr>
+                        )
+                    })}
+                </tbody>
+            </table>
+        </div>
     )
 }
 
