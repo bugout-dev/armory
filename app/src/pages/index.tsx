@@ -8,7 +8,11 @@ import TableData from "../components/TableData"
 import ChartBar from "../components/ChartBar"
 import useProjectTokenMaps from "../hooks/useProjectTokenMaps"
 import useTokenData from "../hooks/useTokenData"
-import { PAGE_SIZE, EMPTY_PROJECT_PLACEHOLDER } from "../settings"
+import {
+    PAGE_SIZE,
+    EMPTY_PROJECT_PLACEHOLDER,
+    FUN_EMPTY_PLACEHOLDER,
+} from "../settings"
 import styles from "../styles/Index.module.css"
 
 const Index = () => {
@@ -127,39 +131,41 @@ const Index = () => {
                         />
                     </div>
                     {allColumns.length > 0 &&
-                        selectedProjectToken != EMPTY_PROJECT_PLACEHOLDER && (
-                            <div className={styles.container_data}>
-                                <TopBar
-                                    allColumns={allColumns}
-                                    goToTokenId={goToTokenId}
-                                    setGoToTokenId={setGoToTokenId}
-                                    activeTopbarRef={activeTopbarRef}
-                                    pageIndex={pageIndex}
-                                    pageCount={pageCount}
-                                    pageOptions={pageOptions}
-                                    gotoPage={gotoPage}
-                                    canPreviousPage={canPreviousPage}
-                                    previousPage={previousPage}
-                                    nextPage={nextPage}
-                                    canNextPage={canNextPage}
-                                    globalFilter={globalFilter}
-                                    setGlobalFilter={setGlobalFilter}
-                                />
-                                <TableData
-                                    getTableProps={getTableProps}
-                                    getTableBodyProps={getTableBodyProps}
-                                    headerGroups={headerGroups}
-                                    rows={page}
-                                    prepareRow={prepareRow}
-                                    goToTokenId={goToTokenId}
-                                    setActiveTopbarRef={setActiveTopbarRef}
-                                />
-                                <ChartBar
-                                    dataTokens={dataTokens}
-                                    columnHeaders={headerGroups}
-                                />
-                            </div>
-                        )}
+                    selectedProjectToken != EMPTY_PROJECT_PLACEHOLDER ? (
+                        <div className={styles.container_data}>
+                            <TopBar
+                                allColumns={allColumns}
+                                goToTokenId={goToTokenId}
+                                setGoToTokenId={setGoToTokenId}
+                                activeTopbarRef={activeTopbarRef}
+                                pageIndex={pageIndex}
+                                pageCount={pageCount}
+                                pageOptions={pageOptions}
+                                gotoPage={gotoPage}
+                                canPreviousPage={canPreviousPage}
+                                previousPage={previousPage}
+                                nextPage={nextPage}
+                                canNextPage={canNextPage}
+                                globalFilter={globalFilter}
+                                setGlobalFilter={setGlobalFilter}
+                            />
+                            <TableData
+                                getTableProps={getTableProps}
+                                getTableBodyProps={getTableBodyProps}
+                                headerGroups={headerGroups}
+                                rows={page}
+                                prepareRow={prepareRow}
+                                goToTokenId={goToTokenId}
+                                setActiveTopbarRef={setActiveTopbarRef}
+                            />
+                            <ChartBar
+                                dataTokens={dataTokens}
+                                columnHeaders={headerGroups}
+                            />
+                        </div>
+                    ) : (
+                        <p>{FUN_EMPTY_PLACEHOLDER}</p>
+                    )}
                 </div>
             </div>
         </Layout>
