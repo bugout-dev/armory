@@ -1,50 +1,80 @@
-import React, { useState, useEffect, useMemo, useCallback, useRef } from "react"
-import { useTable, usePagination } from "react-table"
+import React, { useState, useEffect, useMemo } from "react"
+import { useTable, usePagination, useGlobalFilter } from "react-table"
 
 import Layout from "../components/Layout"
 import ProjectBar from "../components/ProjectBar"
 import TopBar from "../components/TopBar"
 import TableData from "../components/TableData"
 import ChartBar from "../components/ChartBar"
-import useProjectTokens from "../hooks/useProjectTokens"
+import useProjectTokenMaps from "../hooks/useProjectTokenMaps"
 import useTokenData from "../hooks/useTokenData"
+import { PAGE_SIZE, EMPTY_PROJECT_PLACEHOLDER } from "../settings"
 import styles from "../styles/Index.module.css"
 
 const Index = () => {
     const [goToTokenId, setGoToTokenId] = useState<number>()
     const [activeTopbarRef, setActiveTopbarRef] = useState(null)
 
+    // Project Token
+    const [selectedProjectToken, setSelectedProjectToken] = useState(
+        EMPTY_PROJECT_PLACEHOLDER
+    )
+    const [selectedProjectTokenDataUrl, setSelectedProjectTokenDataUrl] =
+        useState(undefined)
+
     const onSuccess = () => {}
     const onError = (error) => {
         console.log(error?.message)
     }
-    const { isLoading: isLoadingProjectTokens, data: projectTokens } =
-        useProjectTokens(onSuccess, onError)
-    const { isLoading: isLoadingTokens, data: dataTokens } = useTokenData(
-        onSuccess,
-        onError
-    )
+    const { isLoading: isLoadingProjectTokenMaps, data: projectTokenMaps } =
+        useProjectTokenMaps(onSuccess, onError)
+    const {
+        isLoading: isLoadingTokens,
+        data: dataTokens,
+        isFetching: isFetchingDataTokens,
+        refetch: dataTokensRefetch,
+    } = useTokenData(onSuccess, onError, selectedProjectTokenDataUrl)
+
+    useEffect(() => {
+        if (
+            selectedProjectTokenDataUrl &&
+            selectedProjectToken &&
+            selectedProjectToken != EMPTY_PROJECT_PLACEHOLDER
+        ) {
+            dataTokensRefetch()
+        }
+    }, [selectedProjectToken])
 
     const columns = useMemo(() => {
         let columnHeaders = []
         if (dataTokens) {
             for (const key in dataTokens[0]) {
                 let keyName = key.replace("_", " ")
-                let maxWidth = 150
-                let minWidth = 140
-                let width = 140
-                if (key === "token_uri" || key == "current_owner") {
-                    maxWidth = 600
-                    minWidth = 400
-                    width = 500
+                if (key === "token_uri") {
+                    columnHeaders.push({
+                        Header: keyName,
+                        accessor: key,
+                        maxWidth: 600,
+                        minWidth: 400,
+                        width: 500,
+                    })
+                } else if (key == "current_owner") {
+                    columnHeaders.push({
+                        Header: keyName,
+                        accessor: key,
+                        maxWidth: 600,
+                        minWidth: 400,
+                        width: 500,
+                    })
+                } else {
+                    columnHeaders.push({
+                        Header: keyName,
+                        accessor: key,
+                        maxWidth: 150,
+                        minWidth: 140,
+                        width: 140,
+                    })
                 }
-                columnHeaders.push({
-                    Header: keyName,
-                    accessor: key,
-                    maxWidth: maxWidth,
-                    minWidth: minWidth,
-                    width: width,
-                })
             }
         }
 
@@ -68,58 +98,68 @@ const Index = () => {
         gotoPage,
         pageCount,
         state,
+        setGlobalFilter,
         prepareRow,
         allColumns,
     } = useTable(
         {
             columns: columns,
             data: data,
-            initialState: { pageSize: 15 },
+            initialState: { pageSize: PAGE_SIZE },
         },
+        useGlobalFilter,
         usePagination
     )
 
-    const { pageIndex } = state
+    const { globalFilter, pageIndex } = state
 
     return (
         <Layout>
             <div className={styles.container_index}>
                 <div className={styles.content}>
                     <div className={styles.container_project}>
-                        <ProjectBar projectTokens={projectTokens} />
-                    </div>
-                    <div className={styles.container_data}>
-                        <TopBar
-                            allColumns={allColumns}
-                            goToTokenId={goToTokenId}
-                            setGoToTokenId={setGoToTokenId}
-                            activeTopbarRef={activeTopbarRef}
-                            pageIndex={pageIndex}
-                            pageCount={pageCount}
-                            pageOptions={pageOptions}
-                            gotoPage={gotoPage}
-                            canPreviousPage={canPreviousPage}
-                            previousPage={previousPage}
-                            nextPage={nextPage}
-                            canNextPage={canNextPage}
-                            projectTokens={projectTokens}
+                        <ProjectBar
+                            projectTokenMaps={projectTokenMaps}
+                            setSelectedProjectToken={setSelectedProjectToken}
+                            setSelectedProjectTokenDataUrl={
+                                setSelectedProjectTokenDataUrl
+                            }
                         />
-                        {!isLoadingTokens && (
-                            <TableData
-                                getTableProps={getTableProps}
-                                getTableBodyProps={getTableBodyProps}
-                                headerGroups={headerGroups}
-                                rows={page}
-                                prepareRow={prepareRow}
-                                goToTokenId={goToTokenId}
-                                setActiveTopbarRef={setActiveTopbarRef}
-                            />
+                    </div>
+                    {allColumns.length > 0 &&
+                        selectedProjectToken != EMPTY_PROJECT_PLACEHOLDER && (
+                            <div className={styles.container_data}>
+                                <TopBar
+                                    allColumns={allColumns}
+                                    goToTokenId={goToTokenId}
+                                    setGoToTokenId={setGoToTokenId}
+                                    activeTopbarRef={activeTopbarRef}
+                                    pageIndex={pageIndex}
+                                    pageCount={pageCount}
+                                    pageOptions={pageOptions}
+                                    gotoPage={gotoPage}
+                                    canPreviousPage={canPreviousPage}
+                                    previousPage={previousPage}
+                                    nextPage={nextPage}
+                                    canNextPage={canNextPage}
+                                    globalFilter={globalFilter}
+                                    setGlobalFilter={setGlobalFilter}
+                                />
+                                <TableData
+                                    getTableProps={getTableProps}
+                                    getTableBodyProps={getTableBodyProps}
+                                    headerGroups={headerGroups}
+                                    rows={page}
+                                    prepareRow={prepareRow}
+                                    goToTokenId={goToTokenId}
+                                    setActiveTopbarRef={setActiveTopbarRef}
+                                />
+                                <ChartBar
+                                    dataTokens={dataTokens}
+                                    columnHeaders={headerGroups}
+                                />
+                            </div>
                         )}
-                        <ChartBar
-                            dataTokens={dataTokens}
-                            columnHeaders={headerGroups}
-                        />
-                    </div>
                 </div>
             </div>
         </Layout>

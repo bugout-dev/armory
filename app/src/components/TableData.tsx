@@ -12,8 +12,6 @@ const TableData = ({
     goToTokenId,
     setActiveTopbarRef,
 }) => {
-    console.log("TableData rerendered")
-
     return (
         <div className={styles.container_table}>
             <table className={styles.table} {...getTableProps()}>

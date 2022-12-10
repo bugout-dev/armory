@@ -4,6 +4,7 @@ import Chart from "../components/Chart"
 import LongSelect from "./LongSelect"
 import LongSelectOption from "./LongSelectOption"
 import styles from "../styles/ChartBar.module.css"
+import { EMPTY_CHART_ATTR_PLACEHOLDER } from "../settings"
 
 const ChartBar = ({ dataTokens, columnHeaders }) => {
     // Column options
@@ -17,7 +18,7 @@ const ChartBar = ({ dataTokens, columnHeaders }) => {
             <LongSelectOption
                 key={"undefined"}
                 option_id={undefined}
-                option_name={undefined}
+                option_name={EMPTY_CHART_ATTR_PLACEHOLDER}
             />,
         ]
         if (columnHeaders) {
@@ -58,11 +59,14 @@ const ChartBar = ({ dataTokens, columnHeaders }) => {
             })
 
             setChartData({
-                chardId: selectedColumnHeader,
+                chardId:
+                    selectedColumnHeader == EMPTY_CHART_ATTR_PLACEHOLDER
+                        ? undefined
+                        : selectedColumnHeader,
                 occurrences: occurrences,
             })
         }
-    }, [selectedColumnHeader])
+    }, [selectedColumnHeader, columnChartOptions])
 
     return (
         <div className={styles.container_charts}>
@@ -71,7 +75,13 @@ const ChartBar = ({ dataTokens, columnHeaders }) => {
                 <div className={styles.element}>
                     <div className={styles.inner_input}>
                         <LongSelect
-                            setSelectedOption={setSelectedColumnHeader}
+                            setSelectedOption={(event) => {
+                                setSelectedColumnHeader(
+                                    event.target.options[
+                                        event.target.selectedIndex
+                                    ].value
+                                )
+                            }}
                             name="columnsChartSelect"
                         >
                             {columnChartOptions}

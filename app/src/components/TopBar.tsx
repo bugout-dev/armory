@@ -6,6 +6,7 @@ import LongInput from "./LongInput"
 import NumInput from "./NumInput"
 import Checkbox from "./Checkbox"
 import PageNavigation from "./PageNavigation"
+import { PAGE_SIZE } from "../settings"
 import styles from "../styles/TopBar.module.css"
 
 const TopBar = ({
@@ -21,18 +22,12 @@ const TopBar = ({
     previousPage,
     nextPage,
     canNextPage,
-    projectTokens,
+    globalFilter,
+    setGlobalFilter,
 }) => {
-    // Search owner address
-    const [selectOwnerAddressInput, setSelectOwnerAddressInput] =
-        useState(undefined)
-
     // Collection
     const [selectedCollection, setSelectedCollection] = useState(undefined)
     const [collectionOptions, setCollectionOptions] = useState([])
-
-    // Checkboxes
-    const [columnCheckboxes, setColumnCheckboxes] = useState([])
 
     useEffect(() => {
         if (
@@ -40,14 +35,15 @@ const TopBar = ({
             activeTopbarRef.current &&
             activeTopbarRef.current.scrollIntoView
         ) {
-            console.log("scroll to", goToTokenId)
+            let goToPage = Math.floor(goToTokenId / PAGE_SIZE)
+            gotoPage(goToPage)
             activeTopbarRef.current.scrollIntoView({
                 behavior: "smooth",
-                block: "start",
-                inline: "nearest",
+                block: "nearest",
+                inline: "start",
             })
         }
-    }, [activeTopbarRef])
+    }, [activeTopbarRef, goToTokenId])
 
     useEffect(() => {
         const tempCollectionOptions = [
@@ -66,21 +62,25 @@ const TopBar = ({
             <div className={styles.topbar_row}>
                 <div className={styles.element}>
                     <LongInput
-                        input={selectOwnerAddressInput}
-                        setInput={setSelectOwnerAddressInput}
-                        placeholder="Search for owner address"
+                        input={globalFilter}
+                        setInput={setGlobalFilter}
+                        placeholder="Global search"
                     />
                 </div>
                 <div className={styles.element}>
                     <LongSelect
-                        setSelectedOption={setSelectedCollection}
+                        setSelectedOption={(event) => {
+                            setSelectedCollection(
+                                event.target.options[event.target.selectedIndex]
+                                    .value
+                            )
+                        }}
                         name="collectionSelect"
                     >
                         {collectionOptions}
                     </LongSelect>
                 </div>
             </div>
-
             <h2>Columns visibility</h2>
             <div className={styles.topbar_row}>
                 <div className={styles.columns_checkbox}>
