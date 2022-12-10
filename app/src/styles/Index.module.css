@@ -3,6 +3,7 @@
     flex-direction: column;
     max-width: 1280px;
     margin: auto;
+    padding-bottom: 1em;
 }
 
 .content {
@@ -15,8 +16,12 @@
 
 .container_data {
     padding-top: 0.4em;
-    padding-bottom: 0.1em; /* Hack remove if you will find why padding disappear */
+    padding-bottom: 1em;
     flex: 1;
     background-color: var(--background-second-color-dark);
     border-radius: 1em;
+}
+
+.container_chart {
+    flex: 1;
 }

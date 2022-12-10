@@ -5,6 +5,7 @@ import Layout from "../components/Layout"
 import ProjectBar from "../components/ProjectBar"
 import TopBar from "../components/TopBar"
 import TableData from "../components/TableData"
+import ChartBar from "../components/ChartBar"
 import useProjectTokens from "../hooks/useProjectTokens"
 import useTokenData from "../hooks/useTokenData"
 import styles from "../styles/Index.module.css"
@@ -88,36 +89,36 @@ const Index = () => {
                         <ProjectBar projectTokens={projectTokens} />
                     </div>
                     <div className={styles.container_data}>
-                        <div className={styles.top_bar}>
-                            <TopBar
-                                allColumns={allColumns}
+                        <TopBar
+                            allColumns={allColumns}
+                            goToTokenId={goToTokenId}
+                            setGoToTokenId={setGoToTokenId}
+                            activeTopbarRef={activeTopbarRef}
+                            pageIndex={pageIndex}
+                            pageCount={pageCount}
+                            pageOptions={pageOptions}
+                            gotoPage={gotoPage}
+                            canPreviousPage={canPreviousPage}
+                            previousPage={previousPage}
+                            nextPage={nextPage}
+                            canNextPage={canNextPage}
+                            projectTokens={projectTokens}
+                        />
+                        {!isLoadingTokens && (
+                            <TableData
+                                getTableProps={getTableProps}
+                                getTableBodyProps={getTableBodyProps}
+                                headerGroups={headerGroups}
+                                rows={page}
+                                prepareRow={prepareRow}
                                 goToTokenId={goToTokenId}
-                                setGoToTokenId={setGoToTokenId}
-                                activeTopbarRef={activeTopbarRef}
-                                pageIndex={pageIndex}
-                                pageCount={pageCount}
-                                pageOptions={pageOptions}
-                                gotoPage={gotoPage}
-                                canPreviousPage={canPreviousPage}
-                                previousPage={previousPage}
-                                nextPage={nextPage}
-                                canNextPage={canNextPage}
-                                projectTokens={projectTokens}
+                                setActiveTopbarRef={setActiveTopbarRef}
                             />
-                        </div>
-                        <div className={styles.table_data}>
-                            {!isLoadingTokens && (
-                                <TableData
-                                    getTableProps={getTableProps}
-                                    getTableBodyProps={getTableBodyProps}
-                                    headerGroups={headerGroups}
-                                    rows={page}
-                                    prepareRow={prepareRow}
-                                    goToTokenId={goToTokenId}
-                                    setActiveTopbarRef={setActiveTopbarRef}
-                                />
-                            )}
-                        </div>
+                        )}
+                        <ChartBar
+                            dataTokens={dataTokens}
+                            columnHeaders={headerGroups}
+                        />
                     </div>
                 </div>
             </div>

@@ -1,0 +1,23 @@
+.container_charts {
+    width: 95%;
+    margin: auto;
+}
+
+.container_charts > .topbar_row {
+    display: flex;
+    margin: 0;
+}
+
+.container_charts > .topbar_row > .element {
+    margin: 0;
+    flex: 1;
+}
+
+.topbar_row > .element + .element {
+    margin-left: 1em;
+}
+
+.inner_chart {
+    margin: 0;
+    padding-top: 1em;
+}

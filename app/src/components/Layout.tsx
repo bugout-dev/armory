@@ -7,8 +7,6 @@ import styles from "../styles/Layout.module.css"
 const Layout = ({ children }) => {
     const [accountName, setAccountName] = useState<string>("unknown")
 
-    useEffect(() => {}, [])
-
     return (
         <>
             <Head>
@@ -18,7 +16,7 @@ const Layout = ({ children }) => {
                 <header className={styles.header}>
                     <nav className={styles.site_nav}>
                         <div className={styles.nav_first}>
-                            <Link href="/">
+                            <Link href="https://moonstream.to">
                                 <img
                                     className={styles.logo}
                                     src={"logo.png"}

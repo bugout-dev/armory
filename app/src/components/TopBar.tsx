@@ -119,7 +119,6 @@ const TopBar = ({
                                     const pageNumber = event.target.value
                                         ? Number(event.target.value) - 1
                                         : 0
-                                    console.log(pageOptions)
                                     gotoPage(pageNumber)
                                 }}
                                 placeholder="0"

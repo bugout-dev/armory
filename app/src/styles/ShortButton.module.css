@@ -15,6 +15,7 @@
 .button:hover {
     background-color: var(--background-color-dark);
     border: 1px solid var(--text-main-color-dark);
+    cursor: pointer;
 }
 
 .button:disabled,
