@@ -2,6 +2,12 @@
     display: flex;
 }
 
+@media (max-width: 480px) {
+    .project_bar {
+        flex-direction: column;
+    }
+}
+
 .project_bar > .element {
     flex: 1;
     margin: 0;
@@ -18,4 +24,11 @@
     padding-top: 0.4em;
     margin-left: auto;
     margin-right: 2em;
+}
+
+@media (max-width: 480px) {
+    .collection_select {
+        max-width: 100%;
+        margin: 1em 0 0 0;
+    }
 }

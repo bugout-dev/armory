@@ -8,6 +8,12 @@
     margin: 0;
 }
 
+@media (max-width: 480px) {
+    .container_charts > .topbar_row {
+        flex-direction: column;
+    }
+}
+
 .container_charts > .topbar_row > .element {
     margin: 0;
     flex: 1;

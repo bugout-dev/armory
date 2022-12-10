@@ -9,7 +9,20 @@ const ApexCharts = dynamic(() => import("react-apexcharts"), { ssr: false })
 const Chart = ({ chartData }) => {
     const [chartState, setChartState] = useState<any>(undefined)
 
+    // Chart settings
+    const [chartShowLegend, setChartShowLegend] = useState<boolean>(true)
+    const [chartWidth, setChartWidth] = useState<string>("600")
+
     useEffect(() => {
+        const { innerWidth: width, innerHeight: height } = window
+        if (width > 600) {
+            setChartWidth("600")
+            setChartShowLegend(true)
+        } else {
+            setChartWidth(width.toString())
+            setChartShowLegend(false)
+        }
+
         if (chartData.chardId) {
             let tempChartState = {
                 series: [],
@@ -36,11 +49,26 @@ const Chart = ({ chartData }) => {
                         show: false,
                     },
                     legend: {
+                        show: chartShowLegend,
+                        position: "right",
                         fontSize: "16px",
                         fontFamily: "Space Grotesk, sans-serif",
                         fontWeight: 400,
                         labels: {
                             colors: "#fff",
+                        },
+                    },
+                    dataLabels: {
+                        style: {
+                            fontSize: "12px",
+                            fontFamily: "Space Grotesk, sans-serif",
+                            fontWeight: 400,
+                        },
+                    },
+                    tooltip: {
+                        style: {
+                            fontSize: "16px",
+                            fontFamily: "Space Grotesk, sans-serif",
                         },
                     },
                 },
@@ -66,7 +94,7 @@ const Chart = ({ chartData }) => {
                                 options={chartState.options}
                                 series={chartState.series}
                                 type="donut"
-                                width="600"
+                                width={chartWidth}
                             />
                         </div>
                     </div>

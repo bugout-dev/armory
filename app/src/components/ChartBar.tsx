@@ -91,7 +91,9 @@ const ChartBar = ({ dataTokens, columnHeaders }) => {
                         <Chart chartData={chartData} />
                     </div>
                 </div>
-                <div className={styles.element}></div>
+                <div className={styles.element}>
+                    {/* Placeholder for other chart/common info/legend */}
+                </div>
             </div>
         </div>
     )
