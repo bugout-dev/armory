@@ -4,7 +4,7 @@ import styles from "../styles/Checkbox.module.css"
 
 const Checkbox = ({ column, ...rest }) => {
     return (
-        <label className={styles.container_checkbox}>
+        <label className={styles.container_checkbox} {...rest}>
             <input type="checkbox" {...column.getToggleHiddenProps()} />
             <p>{column.Header}</p>
         </label>

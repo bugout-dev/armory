@@ -9,6 +9,7 @@ const LongInput = ({ input, setInput, ...rest }) => {
             value={input || ""}
             onChange={(event) => setInput(event.target.value)}
             placeholder={rest.placeholder}
+            {...rest}
         />
     )
 }

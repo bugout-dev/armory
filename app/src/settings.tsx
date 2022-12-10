@@ -6,8 +6,8 @@ export const EMPTY_CHART_ATTR_PLACEHOLDER = "Not selected"
 export const PAGE_SIZE = 40
 
 // Request settings
-export const CACHE_TIME = 600000
-export const STALE_TIME = 600000 // How long it will not re-fetch data from server and show stale results
+export const CACHE_TIME = 1800000
+export const STALE_TIME = 1800000 // How long it will not re-fetch data from server and show stale results
 
 // Fun placeholders
 export const FUN_EMPTY_PLACEHOLDER =

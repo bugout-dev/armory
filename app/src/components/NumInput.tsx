@@ -10,6 +10,7 @@ const NumInput = ({ input, onChange, ...rest }) => {
             onChange={onChange}
             placeholder={rest.placeholder}
             type="number"
+            {...rest}
         />
     )
 }

@@ -54,15 +54,7 @@ const Index = () => {
         if (dataTokens) {
             for (const key in dataTokens[0]) {
                 let keyName = key.replace("_", " ")
-                if (key === "token_uri") {
-                    columnHeaders.push({
-                        Header: keyName,
-                        accessor: key,
-                        maxWidth: 600,
-                        minWidth: 400,
-                        width: 500,
-                    })
-                } else if (key == "current_owner") {
+                if (key === "token_uri" || key == "current_owner") {
                     columnHeaders.push({
                         Header: keyName,
                         accessor: key,
