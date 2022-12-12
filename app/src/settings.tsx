@@ -12,3 +12,5 @@ export const STALE_TIME = 1800000 // How long it will not re-fetch data from ser
 // Fun placeholders
 export const FUN_EMPTY_PLACEHOLDER =
     "I had just returned, I thought that cold beer, a hot ham, were waiting for me and here - an emptiness.."
+export const FUN_LOADING_PLACEHOLDER =
+    "Searching for the sword and mail in your size.."

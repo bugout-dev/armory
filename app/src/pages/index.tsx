@@ -12,14 +12,17 @@ import {
     PAGE_SIZE,
     EMPTY_PROJECT_PLACEHOLDER,
     FUN_EMPTY_PLACEHOLDER,
+    FUN_LOADING_PLACEHOLDER,
 } from "../settings"
 import styles from "../styles/Index.module.css"
 
 const Index = () => {
+    // Table and data states
+    const [dataTokensLength, setDataTokensLength] = useState<number>(0)
     const [goToTokenId, setGoToTokenId] = useState<number>()
     const [activeTopbarRef, setActiveTopbarRef] = useState(null)
 
-    // Project Token
+    // Selected project token to render
     const [selectedProjectToken, setSelectedProjectToken] = useState(
         EMPTY_PROJECT_PLACEHOLDER
     )
@@ -33,13 +36,14 @@ const Index = () => {
     const { isLoading: isLoadingProjectTokenMaps, data: projectTokenMaps } =
         useProjectTokenMaps(onSuccess, onError)
     const {
-        isLoading: isLoadingTokens,
+        isLoading: isLoadingDataTokens,
         data: dataTokens,
         isFetching: isFetchingDataTokens,
         refetch: dataTokensRefetch,
     } = useTokenData(onSuccess, onError, selectedProjectTokenDataUrl)
 
     useEffect(() => {
+        // Handle project token selector
         if (
             selectedProjectTokenDataUrl &&
             selectedProjectToken &&
@@ -50,6 +54,7 @@ const Index = () => {
     }, [selectedProjectToken])
 
     const columns = useMemo(() => {
+        // columns - must be memorized
         let columnHeaders = []
         if (dataTokens) {
             for (const key in dataTokens[0]) {
@@ -78,6 +83,10 @@ const Index = () => {
     }, [dataTokens])
 
     const data = useMemo(() => {
+        // data - must be memorized
+        if (dataTokens) {
+            setDataTokensLength(dataTokens.length)
+        }
         return dataTokens
     }, [dataTokens])
 
@@ -97,6 +106,7 @@ const Index = () => {
         setGlobalFilter,
         prepareRow,
         allColumns,
+        flatRows,
     } = useTable(
         {
             columns: columns,
@@ -106,7 +116,6 @@ const Index = () => {
         useGlobalFilter,
         usePagination
     )
-
     const { globalFilter, pageIndex } = state
 
     return (
@@ -153,8 +162,12 @@ const Index = () => {
                             <ChartBar
                                 dataTokens={dataTokens}
                                 columnHeaders={headerGroups}
+                                dataTokensLength={dataTokensLength}
+                                numOfFlatRows={flatRows.length}
                             />
                         </div>
+                    ) : isLoadingDataTokens ? (
+                        <p>{FUN_LOADING_PLACEHOLDER}</p>
                     ) : (
                         <p>{FUN_EMPTY_PLACEHOLDER}</p>
                     )}

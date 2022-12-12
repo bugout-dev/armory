@@ -27,3 +27,31 @@
     margin: 0;
     padding-top: 1em;
 }
+
+/* Stats block */
+.stats {
+    display: flex;
+    justify-content: right;
+}
+
+@media (max-width: 480px) {
+    .stats {
+        margin-top: 2em;
+    }
+}
+
+.stats > .element_column {
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+    margin: 0;
+    padding-left: 1em;
+}
+
+.stats > .element_column + .element_column {
+    text-align: left;
+}
+
+.stats > .element_column > p {
+    margin: 0;
+}

@@ -6,7 +6,12 @@ import LongSelectOption from "./LongSelectOption"
 import styles from "../styles/ChartBar.module.css"
 import { EMPTY_CHART_ATTR_PLACEHOLDER } from "../settings"
 
-const ChartBar = ({ dataTokens, columnHeaders }) => {
+const ChartBar = ({
+    dataTokens,
+    columnHeaders,
+    dataTokensLength,
+    numOfFlatRows,
+}) => {
     // Column options
     const [selectedColumnHeader, setSelectedColumnHeader] = useState(undefined)
     const [columnChartOptions, setColumnChartOptions] = useState([])
@@ -70,7 +75,7 @@ const ChartBar = ({ dataTokens, columnHeaders }) => {
 
     return (
         <div className={styles.container_charts}>
-            <h2>Attributes chart</h2>
+            <h2>Chart and stats</h2>
             <div className={styles.topbar_row}>
                 <div className={styles.element}>
                     <div className={styles.inner_input}>
@@ -92,7 +97,20 @@ const ChartBar = ({ dataTokens, columnHeaders }) => {
                     </div>
                 </div>
                 <div className={styles.element}>
-                    {/* Placeholder for other chart/common info/legend */}
+                    <div className={styles.stats}>
+                        <div className={styles.element_column}>
+                            <p>
+                                <strong>{dataTokensLength}</strong>
+                            </p>
+                            <p>
+                                <strong>{numOfFlatRows}</strong>
+                            </p>
+                        </div>
+                        <div className={styles.element_column}>
+                            <p>Total number of tokens</p>
+                            <p>Showed number of tokens</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
