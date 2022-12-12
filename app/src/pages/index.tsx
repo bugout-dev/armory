@@ -55,19 +55,12 @@ const Index = () => {
     }, [dataTokens, isLoadingDataTokens])
 
     useEffect(() => {
-        console.log(
-            0,
-            selectedProjectTokenDataUrl,
-            selectedProjectToken,
-            EMPTY_PROJECT_PLACEHOLDER
-        )
         // Handle project token selector
         if (
             selectedProjectTokenDataUrl &&
             selectedProjectToken &&
             selectedProjectToken != EMPTY_PROJECT_PLACEHOLDER
         ) {
-            console.log("refetch")
             dataTokensRefetch()
         }
     }, [selectedProjectToken])
