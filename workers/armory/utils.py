@@ -1,9 +1,5 @@
-import logging
 import os
 from enum import Enum
-from typing import Any
-
-logger = logging.getLogger(__name__)
 
 MOONSTREAM_DB_LABEL = "moonworm-alpha"
 
@@ -32,20 +28,36 @@ if INFLUENCE_INFC_ADDRESS is None:
 
 
 class TokenTypes(Enum):
-    pec = CHAMPIONS_ASCENSION_PEC_ADDRESS
-    cap = CHAMPIONS_ASCENSION_CAP_ADDRESS
-    infc = INFLUENCE_INFC_ADDRESS
+    PEC = "pec"
+    CAP = "cap"
+    INFC = "infc"
+
+
+def get_token_bucket_file_path(token_type: str) -> str:
+    s3_file_path = ""
+    if token_type == TokenTypes.PEC.name:
+        s3_file_path = f"{MOONSTREAM_S3_PUBLIC_DATA_BUCKET_PREFIX}/armory/champions_ascension/pec/data.json"
+    elif token_type == TokenTypes.CAP.name:
+        s3_file_path = f"{MOONSTREAM_S3_PUBLIC_DATA_BUCKET_PREFIX}/armory/champions_ascension/cap/data.json"
+    elif token_type == TokenTypes.INFC.name:
+        s3_file_path = (
+            f"{MOONSTREAM_S3_PUBLIC_DATA_BUCKET_PREFIX}/armory/influence/infc/data.json"
+        )
+    else:
+        raise Exception(f"Unknown token type: {token_type}")
+
+    return s3_file_path
 
 
 def get_contract_address(token_type: str) -> str:
     address_str = ""
-    if token_type == TokenTypes.pec.name:
-        address_str = TokenTypes.pec.value
-    elif token_type == TokenTypes.cap.name:
-        address_str = TokenTypes.cap.value
-    elif token_type == TokenTypes.infc.name:
-        address_str = TokenTypes.infc.value
+    if token_type == TokenTypes.PEC.name:
+        address_str = CHAMPIONS_ASCENSION_PEC_ADDRESS
+    elif token_type == TokenTypes.CAP.name:
+        address_str = CHAMPIONS_ASCENSION_CAP_ADDRESS
+    elif token_type == TokenTypes.INFC.name:
+        address_str = INFLUENCE_INFC_ADDRESS
     else:
-        logger.error(f"Unknown token type: {token_type}")
+        raise Exception(f"Unknown token type: {token_type}")
 
     return address_str

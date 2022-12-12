@@ -9,8 +9,9 @@ from enum import Enum
 from typing import Any, Dict, List, Tuple
 
 import boto3
-import requests
+
 import web3
+import requests
 from moonstreamdb.db import yield_db_read_only_session_ctx
 from sqlalchemy.sql import text
 from tqdm import tqdm
@@ -21,9 +22,9 @@ from infc.web3_util import connect
 from .utils import (
     MOONSTREAM_DB_LABEL,
     MOONSTREAM_S3_PUBLIC_DATA_BUCKET,
-    MOONSTREAM_S3_PUBLIC_DATA_BUCKET_PREFIX,
     TokenTypes,
     get_contract_address,
+    get_token_bucket_file_path,
 )
 
 logging.basicConfig(level=logging.INFO)
@@ -420,69 +421,76 @@ def workers_download_handler(args: argparse.Namespace) -> None:
     Downloads data from S3 bucket.
     """
     output_dir = args.dir.rstrip("/")
-
-    s3_file_path = ""
-    output_file_name = ""
-    if args.token_type == TokenTypes.pec.name:
-        output_file_name = "pec"
-        s3_file_path = f"{MOONSTREAM_S3_PUBLIC_DATA_BUCKET_PREFIX}/armory/champions_ascension/pec/data.json"
-    elif args.token_type == TokenTypes.cap.name:
-        output_file_name = "cap"
-        s3_file_path = f"{MOONSTREAM_S3_PUBLIC_DATA_BUCKET_PREFIX}/armory/champions_ascension/cap/data.json"
-    elif args.token_type == TokenTypes.infc.name:
-        output_file_name = "infc"
-        s3_file_path = (
-            f"{MOONSTREAM_S3_PUBLIC_DATA_BUCKET_PREFIX}/armory/influence/infc/data.json"
-        )
-
-    if s3_file_path == "" or output_file_name == "":
-        raise Exception(
-            f"S3 file path: {s3_file_path} or output file name: {output_file_name} not specified"
-        )
+    s3_file_path = get_token_bucket_file_path(args.token_type)
 
     s3 = boto3.resource("s3")
     try:
         s3.Bucket(MOONSTREAM_S3_PUBLIC_DATA_BUCKET).download_file(
-            s3_file_path, f"{output_dir}/{output_file_name}.json"
+            s3_file_path, f"{output_dir}/{args.token_type.value}.json"
         )
     except Exception as e:
         raise Exception(str(e))
 
-    logger.info(f"File {output_file_name} downloaded")
+    logger.info(f"File {args.token_type.value} downloaded")
 
 
 def workers_refresh_handler(args: argparse.Namespace) -> None:
-    input_path, _ = parse_input(args.input)
+    """
+    Fetch current_owners for token, updated local data file and upload to S3 bucket.
+    """
+    data_file_path = f"data/{TokenTypes[args.token_type].value}.json"
+    s3_file_path = get_token_bucket_file_path(args.token_type)
 
-    s3_file_path = ""
-    if args.token_type == TokenTypes.pec.name:
-        s3_file_path = f"{MOONSTREAM_S3_PUBLIC_DATA_BUCKET_PREFIX}/armory/champions_ascension/pec/data.json"
-    elif args.token_type == TokenTypes.cap.name:
-        s3_file_path = f"{MOONSTREAM_S3_PUBLIC_DATA_BUCKET_PREFIX}/armory/champions_ascension/cap/data.json"
-    elif args.token_type == TokenTypes.infc.name:
-        s3_file_path = (
-            f"{MOONSTREAM_S3_PUBLIC_DATA_BUCKET_PREFIX}/armory/influence/infc/data.json"
+    address_str = get_contract_address(token_type=args.token_type)
+    db_rows = fetch_tokens_db_data(address=address_str)
+
+    with open(data_file_path, "r", encoding="utf-8") as ifp:
+        input_data_json = json.load(ifp)
+
+    if len(input_data_json) != len(db_rows):
+        raise Exception(
+            f"Different length of tokens in file {len(input_data_json)} and in database {len(db_rows)}"
         )
 
-    s3 = boto3.client("s3")
+    updated_cnt = 0
+    updated_lst = []
+    for i, db_token in enumerate(db_rows):
+        if input_data_json[i]["token_id"] == int(db_token[0]):
+            token = input_data_json[i]
+        else:
+            # Use slow method if order is different
+            token = list(
+                filter(lambda x: x["token_id"] == int(db_token[0]), input_data_json)
+            )[0]
 
-    with open(input_path, "r", encoding="utf-8") as ifp:
-        data = ifp.read()
+        if token["current_owner"] != db_token[1]:
+            token["current_owner"] = db_token[1]
+            updated_cnt += 1
 
-        try:
-            s3.put_object(
-                Body=data,
-                Bucket=MOONSTREAM_S3_PUBLIC_DATA_BUCKET,
-                Key=s3_file_path,
-                ContentType="application/json",
-                Metadata={"armory": "data"},
-            )
-        except Exception as e:
-            raise Exception(str(e))
+        updated_lst.append(token)
 
-    logger.info(
-        f"Uploaded file: {input_path} to s3://{MOONSTREAM_S3_PUBLIC_DATA_BUCKET}/{s3_file_path}"
-    )
+    logger.info(f"Updated current owner in {updated_cnt} {args.token_type} tokens")
+    data = json.dumps(updated_lst)
+
+    if updated_cnt != 0:
+        with open(data_file_path, "w", encoding="utf-8") as ofp:
+            logger.info(f"Updated file {data_file_path}")
+            ofp.write(data)
+
+    try:
+        s3 = boto3.client("s3")
+        s3.put_object(
+            Body=data,
+            Bucket=MOONSTREAM_S3_PUBLIC_DATA_BUCKET,
+            Key=s3_file_path,
+            ContentType="application/json",
+            Metadata={"armory": "data"},
+        )
+        logger.info(
+            f"Uploaded file {data_file_path} to s3://{MOONSTREAM_S3_PUBLIC_DATA_BUCKET}/{s3_file_path}"
+        )
+    except Exception as e:
+        raise Exception(str(e))
 
 
 def main() -> None:
@@ -525,13 +533,6 @@ def main() -> None:
         "--token_type",
         required=True,
         help=f"Available contracts: {[member.name for member in TokenTypes]}",
-    )
-    parser_workers_refresh.add_argument(
-        "-i",
-        "--input",
-        type=str,
-        required=True,
-        help="Input JSON file path",
     )
     parser_workers_refresh.set_defaults(func=workers_refresh_handler)
 
