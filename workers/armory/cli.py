@@ -9,9 +9,8 @@ from enum import Enum
 from typing import Any, Dict, List, Tuple
 
 import boto3
-
-import web3
 import requests
+import web3
 from moonstreamdb.db import yield_db_read_only_session_ctx
 from sqlalchemy.sql import text
 from tqdm import tqdm

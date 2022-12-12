@@ -36,12 +36,12 @@ class TokenTypes(Enum):
 def get_token_bucket_file_path(token_type: str) -> str:
     s3_file_path = ""
     if token_type == TokenTypes.PEC.name:
-        s3_file_path = f"{MOONSTREAM_S3_PUBLIC_DATA_BUCKET_PREFIX}/armory/champions_ascension/pec/data.json"
+        s3_file_path = f"{MOONSTREAM_S3_PUBLIC_DATA_BUCKET_PREFIX}/armory/champions_ascension/pec.json"
     elif token_type == TokenTypes.CAP.name:
-        s3_file_path = f"{MOONSTREAM_S3_PUBLIC_DATA_BUCKET_PREFIX}/armory/champions_ascension/cap/data.json"
+        s3_file_path = f"{MOONSTREAM_S3_PUBLIC_DATA_BUCKET_PREFIX}/armory/champions_ascension/cap.json"
     elif token_type == TokenTypes.INFC.name:
         s3_file_path = (
-            f"{MOONSTREAM_S3_PUBLIC_DATA_BUCKET_PREFIX}/armory/influence/infc/data.json"
+            f"{MOONSTREAM_S3_PUBLIC_DATA_BUCKET_PREFIX}/armory/influence/infc.json"
         )
     else:
         raise Exception(f"Unknown token type: {token_type}")
