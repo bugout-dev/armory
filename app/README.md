@@ -1,1 +1,6 @@
-# next-js-template
+# armory-app
+
+```bash
+npm i
+npm run dev
+```
