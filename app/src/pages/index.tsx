@@ -18,6 +18,7 @@ import styles from "../styles/Index.module.css"
 
 const Index = () => {
     // Table and data states
+    const [fetchedData, setFetchedData] = useState(undefined)
     const [dataTokensLength, setDataTokensLength] = useState<number>(0)
     const [goToTokenId, setGoToTokenId] = useState<number>()
     const [activeTopbarRef, setActiveTopbarRef] = useState(null)
@@ -40,15 +41,33 @@ const Index = () => {
         data: dataTokens,
         isFetching: isFetchingDataTokens,
         refetch: dataTokensRefetch,
-    } = useTokenData(onSuccess, onError, selectedProjectTokenDataUrl)
+    } = useTokenData(
+        onSuccess,
+        onError,
+        selectedProjectTokenDataUrl,
+        selectedProjectToken
+    )
 
     useEffect(() => {
+        if (dataTokens) {
+            setFetchedData(dataTokens)
+        }
+    }, [dataTokens, isLoadingDataTokens])
+
+    useEffect(() => {
+        console.log(
+            0,
+            selectedProjectTokenDataUrl,
+            selectedProjectToken,
+            EMPTY_PROJECT_PLACEHOLDER
+        )
         // Handle project token selector
         if (
             selectedProjectTokenDataUrl &&
             selectedProjectToken &&
             selectedProjectToken != EMPTY_PROJECT_PLACEHOLDER
         ) {
+            console.log("refetch")
             dataTokensRefetch()
         }
     }, [selectedProjectToken])
@@ -56,8 +75,8 @@ const Index = () => {
     const columns = useMemo(() => {
         // columns - must be memorized
         let columnHeaders = []
-        if (dataTokens) {
-            for (const key in dataTokens[0]) {
+        if (fetchedData) {
+            for (const key in fetchedData[0]) {
                 let keyName = key.replace("_", " ")
                 if (key === "token_uri" || key == "current_owner") {
                     columnHeaders.push({
@@ -80,15 +99,15 @@ const Index = () => {
         }
 
         return columnHeaders
-    }, [dataTokens])
+    }, [fetchedData])
 
     const data = useMemo(() => {
         // data - must be memorized
-        if (dataTokens) {
-            setDataTokensLength(dataTokens.length)
+        if (fetchedData) {
+            setDataTokensLength(fetchedData.length)
         }
-        return dataTokens
-    }, [dataTokens])
+        return fetchedData
+    }, [fetchedData])
 
     const {
         getTableProps,
@@ -160,7 +179,7 @@ const Index = () => {
                                 setActiveTopbarRef={setActiveTopbarRef}
                             />
                             <ChartBar
-                                dataTokens={dataTokens}
+                                fetchedData={fetchedData}
                                 columnHeaders={headerGroups}
                                 dataTokensLength={dataTokensLength}
                                 numOfFlatRows={flatRows.length}

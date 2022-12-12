@@ -7,7 +7,7 @@ import styles from "../styles/ChartBar.module.css"
 import { EMPTY_CHART_ATTR_PLACEHOLDER } from "../settings"
 
 const ChartBar = ({
-    dataTokens,
+    fetchedData,
     columnHeaders,
     dataTokensLength,
     numOfFlatRows,
@@ -50,10 +50,10 @@ const ChartBar = ({
     }, [columnHeaders])
 
     useEffect(() => {
-        if (dataTokens) {
+        if (fetchedData) {
             let occurrences = {}
 
-            dataTokens.forEach((token) => {
+            fetchedData.forEach((token) => {
                 for (const key in token) {
                     if (key == selectedColumnHeader) {
                         occurrences[token[key]] = occurrences[token[key]]
