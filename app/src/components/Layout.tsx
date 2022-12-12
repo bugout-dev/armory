@@ -2,11 +2,10 @@ import React, { useEffect, useState } from "react"
 import Head from "next/head"
 import Link from "next/link"
 
+import MetaMaskBar from "./MetaMaskBar"
 import styles from "../styles/Layout.module.css"
 
 const Layout = ({ children }) => {
-    const [accountName, setAccountName] = useState<string>("unknown")
-
     return (
         <>
             <Head>
@@ -25,9 +24,7 @@ const Layout = ({ children }) => {
                             </Link>
                         </div>
                         <ul className={styles.site_nav_ul}>
-                            <li className={styles.nav_account}>
-                                <p>{accountName}</p>
-                            </li>
+                            {/* <MetaMaskBar /> */}
                         </ul>
                     </nav>
                 </header>

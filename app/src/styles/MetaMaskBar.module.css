@@ -1,0 +1,29 @@
+.container_metamask {
+    width: 100%;
+    display: flex;
+    align-items: right;
+    justify-content: right;
+
+    padding-right: 2em;
+
+    /* border: 1px solid red; */
+}
+
+.connected_inner_nav {
+    display: flex;
+    margin: 0;
+    list-style-type: none;
+
+    /* border: 1px solid blue; */
+}
+
+.connected_inner_nav > .nav_menu {
+    flex: 1;
+    margin: 0;
+
+    /* border: 1px solid yellow; */
+}
+
+.connected_inner_nav > .nav_menu + .nav_menu {
+    padding-left: 1em;
+}
